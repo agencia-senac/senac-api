@@ -4,7 +4,20 @@ var express = require('express'),
 
 router.get('/professor', function (req, res) {
     res.setHeader('Content-Type', 'application/json');
-    res.json(bd_professor.dados);
+
+    var professoresRetorno = [];
+
+    for (var i = 0; i < bd_professor.dados.length; i++) {
+
+        var professor = bd_professor.dados[i];
+
+        if (professor) {
+
+            professoresRetorno.push(professor);
+        }
+    }
+
+    res.json(professoresRetorno);
 });
 
 router.post('/professor', function (req, res) {
@@ -22,9 +35,29 @@ router.post('/professor', function (req, res) {
     }
 });
 
-router.delete('/professor', function(req, res) {
-    //TODO
-    res.sendStatus(501);
+router.delete('/professor/:id', function (req, res) {
+    var id = req.params.id;
+
+    var posicaoProfessorParaDeletar;
+
+    for (var i = 0; i < bd_professor.dados.length; i++) {
+
+        var professor = bd_professor.dados[i];
+
+        if (professor != undefined && professor.id == id) {
+            posicaoProfessorParaDeletar = i;
+            break;
+        }
+    }
+
+    if (posicaoProfessorParaDeletar != undefined) {
+
+        delete bd_professor.dados[posicaoProfessorParaDeletar];
+        res.sendStatus(204);
+    } else {
+
+        res.sendStatus(404); //Not found
+    }
 });
 
 module.exports = router;
