@@ -25,7 +25,11 @@ router.post('/professor', function (req, res) {
         var novoProfessor = req.body;
         var ultimoProfessor = bd_professor.dados[bd_professor.dados.length - 1];
 
-        novoProfessor.id = ultimoProfessor.id + 1;
+        if (ultimoProfessor) {
+            novoProfessor.id = ultimoProfessor.id + 1;
+        } else {
+            novoProfessor.id = 1;
+        }
 
         bd_professor.dados.push(novoProfessor);//simula um insert no banco de dados
         res.json(novoProfessor);
@@ -52,7 +56,7 @@ router.delete('/professor/:id', function (req, res) {
 
     if (posicaoProfessorParaDeletar != undefined) {
 
-        delete bd_professor.dados[posicaoProfessorParaDeletar];
+        bd_professor.dados.splice(posicaoProfessorParaDeletar, 1);
         res.sendStatus(204);
     } else {
 
